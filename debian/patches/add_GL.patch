@@ -1,0 +1,17 @@
+--- hintview-2.0.orig/src/CMakeLists.txt
++++ hintview-2.0/src/CMakeLists.txt
+@@ -1,3 +1,5 @@
++set(OpenGL_GL_PREFERENCE "GLVND" CACHE STRING "OpenGL_GL_PREFERENCE")
++find_package(OpenGL REQUIRED)
+ set(WITH_GTK "0" CACHE STRING "GTK version")
+ 
+ if(WITH_GTK STREQUAL "0")
+@@ -39,6 +41,8 @@
+ target_link_libraries(hintview PRIVATE glfw)
+ target_link_libraries(hintview PRIVATE Freetype::Freetype)
+ target_link_libraries(hintview PRIVATE ZLIB::ZLIB)
++target_link_libraries(hintview PRIVATE OpenGL)
++target_link_libraries(hintview PRIVATE m)
+ 
+ install(TARGETS hintview BUNDLE DESTINATION "/Applications")
+ install(FILES "../man/hintview.1" TYPE MAN)

@@ -1,0 +1,20 @@
+The official sources for hintview are now on github:
+
+https://github.com/ruckertm/HINT/tree/main/hintview/
+
+There is always an OS specific directory (/Linux) and the common /backend directory.
+
+to compile with GTK and the existing Makefile you set the WITH_GTK environment variable. So e.g.
+
+cd Linux
+WITH_GTK=2 make
+
+Then the file chooser dialog will be compiled by GTK. Without GTK there is no such dialog but only the input file on the command line.
+The user interface of the Linux version is very minimalistic. On the one hand it is a good starting point for own developments, on the other hand it is not very easy to use.
+The key and mouse functions are described in a man page hintview.1.
+
+I distinguish between the version for the viewer and the version for the HINT file version. I have just changed the output of the version, so that both versions are output. It now looks like this
+
+./hintview --version
+hintview version 1.3.1
+HINT file format version 2.0

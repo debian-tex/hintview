@@ -1,0 +1,8 @@
+--- hintview-1.3.1.orig/Linux/hintview.1
++++ hintview-1.3.1/Linux/hintview.1
+@@ -1,4 +1,4 @@
+-.TH HINTVIEW1 "11 November 2021" "Version 1.0"
++.TH HINTVIEW 1 "11 November 2021" "Version 1.0"
+ .\"=====================================================================
+ .if n .ds MF Metafont
+ .if t .ds MF Metafont

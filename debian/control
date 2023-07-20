@@ -1,0 +1,43 @@
+Source: hintview
+Section: text
+Priority: optional
+Maintainer: Debian TeX Task Force <debian-tex-maint@lists.debian.org>
+Uploaders: Hilmar Preusse <hille42@web.de>
+Rules-Requires-Root: no
+Build-Depends:
+ debhelper-compat (= 13),
+ libglfw3-dev,
+ libglew-dev,
+ libfreetype-dev,
+ libftgl-dev,
+ libxrandr-dev,
+ libxinerama-dev,
+ libxi-dev,
+ libxcursor-dev,
+ libopengl-dev,
+ zlib1g-dev,
+ libgtk-3-dev
+Standards-Version: 4.6.2
+Homepage: https://hint.userweb.mwn.de/hint/hintview.html
+Vcs-Browser: https://github.com/debian-tex/hintview
+Vcs-Git: https://github.com/debian-tex/hintview.git
+
+Package: hintview
+Architecture: any
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: Program to view HINT files
+ The HINT file format is an alternative to the DVI or PDF format
+ that was designed specifically for on screen reading of documents.
+ Especially on mobile devices, reading DVI or PDF documents can be
+ cumbersome.
+ .
+ Mobile devices are available in a large variety of sizes but are
+ typically not large enough to display documents formatted for
+ letter-size paper. To compensate for the limitations of a small
+ screen, users are used to alternate between landscape (few long
+ lines) and portrait (more short lines) mode. The HINT format
+ supports variable and varying screen sizes leveraging the ability
+ of TeX to format a document for (almost) arbitrary values of
+ \hsize and \vsize.
