@@ -38,9 +38,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#define VERSION 1
-#define REVISION 3
-#define PATCHLEVEL 1
+#define VERSION 2
+#define REVISION 1
+#define PATCHLEVEL 0
 
 #include "error.h"
 #include "basetypes.h"
@@ -51,19 +51,19 @@
 #include "rendernative.h"
 
 /* Error Handling */
-int hint_error(const char *title, const char *message)
+static int hint_error(const char *title, const char *message)
 { fprintf(stderr,"ERROR %s: %s\n",title,message);
   return 0;
 }
 
-int hmessage(char *title, char *format, ...)
+static int hmessage(char *title, char *format, ...)
 { va_list vargs;
   va_start(vargs,format);
   vfprintf(stderr, format, vargs);
   return 0;
 }
 
-void error_callback(int error, const char* description)
+static void error_callback(int error, const char* description)
 { hint_error("OpenGL",description);
   longjmp(hint_error_exit,1);
 }
@@ -173,7 +173,7 @@ static int find_monitor(int x, int y)
       if (x <= mx+mode->width && y<=my+mode->height)
       { m_width=mode->width; m_height=mode->height;
         glfwGetMonitorPhysicalSize(monitors[i], &width_mm, &height_mm);
-        LOG("Monitor pos: %d x %d, size: %d x %d, %dmm x %dmm\n",mx,my,m_width,m_height,width_mm, height_mm);
+        //LOG("Monitor pos: %d x %d, size: %d x %d, %dmm x %dmm\n",mx,my,m_width,m_height,width_mm, height_mm);
         return i;
       }
     }
@@ -191,8 +191,8 @@ void set_dpi(GLFWwindow* window, int px, int py)
   find_monitor(wx,wy);
   x_dpi=25.5*px*m_width/width_mm/ww;
   y_dpi=25.5*py*m_height/height_mm/wh;
-  LOG("Window pos:  %d x %d, size: %d x %d,  %dpx x %dpx\n",wx, wy,ww,wh,px,py);
-  LOG("dpi: %f x %f\n",x_dpi,y_dpi);
+  //LOG("Window pos:  %d x %d, size: %d x %d,  %dpx x %dpx\n",wx, wy,ww,wh,px,py);
+  //LOG("dpi: %f x %f\n",x_dpi,y_dpi);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int w, int h)
@@ -358,7 +358,7 @@ int command_line(int argc, char *argv[])
 	    if (strcmp(argv[i]+2,"help")==0) return help();
 	    else if (strcmp(argv[i]+2,"version")==0)
 	      { fprintf(stdout,"hintview version %d.%d.%d\nHINT file format version %d.%d\n", 
-			VERSION, REVISION, PATCHLEVEL, HINT_VERSION, HINT_SUB_VERSION);
+			VERSION, REVISION, PATCHLEVEL, HINT_VERSION, HINT_MINOR_VERSION);
 	        return 0;
 	      }
 	    else
@@ -528,6 +528,21 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
   }      
 }
 
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+  if (yoffset > 0.0)
+  {
+    pos=hint_page_prev();
+    hint_page();
+    clear_cursor();
+  } else if (yoffset < 0.0)
+  {
+    pos=hint_page_next();
+    hint_page();
+    clear_cursor();
+  }
+}
+
 void cursor_enter_callback(GLFWwindow* window, int entered)
 { if (entered && autoreload && new_file_time())
     reload_file();
@@ -573,6 +588,7 @@ int create_window(void)
   glfwSetKeyCallback(window, key_callback);
   glfwSetCursorEnterCallback(window,cursor_enter_callback);
   glfwSetMouseButtonCallback(window, mouse_button_callback);
+  glfwSetScrollCallback(window, scroll_callback);
   glfwSetCursorPosCallback(window, cursor_position_callback);
 
   glfwSetCursorPos(window, px_h/2, px_v/2);
@@ -588,6 +604,7 @@ int main(int argc, char *argv[])
     return 1;
    if (!create_window())
     return 1;
+  nativeSetColor(color_defaults);
   nativeSetDark(dark);
   hint_resize(px_h,px_v,scale*x_dpi,scale*y_dpi);
   if (!open_file(home))
@@ -599,7 +616,7 @@ int main(int argc, char *argv[])
       glfwWaitEvents();
     } // Check if the ESC key was pressed or the window was closed
     while(glfwWindowShouldClose(window) == 0 );
-  nativeClear();
+  //  nativeClear();
   glfwDestroyWindow(window); // part of glfwTerminate
   glfwTerminate();
   return 0;
